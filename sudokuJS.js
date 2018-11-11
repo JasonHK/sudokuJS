@@ -1,8 +1,8 @@
 "use strict";
 
-class SudokuJS 
+class SudokuJS
 {
-    constructor(selector, options = {}) 
+    constructor(selector, options = {})
     {
 
         /*
@@ -79,7 +79,7 @@ class SudokuJS
     * methods
     *-----------*/
     //shortcut for logging..
-    log(message) 
+    log(message)
     {
         if (window.console && console.log) {
             console.log(message);
@@ -98,8 +98,39 @@ class SudokuJS
     *  TYPE: solely based on strategies required to solve board (i.e. single count per strategy)
     *  SCORE: distinguish between boards of same difficulty.. based on point system. Needs work.
     * -----------------------------------------------------------------*/
-    calcBoardDifficulty(sedStrategies) 
+    calcBoardDifficulty(sedStrategies)
     {
+        let boardDifficulty = {};
 
+        if (this.usedStrategies.length < 3) {
+            boardDifficulty.level = this.Difficulties.Easy;
+        } else if (this.usedStrategies.length < 4) {
+            boardDifficulty.level = this.Difficulties.Medium;
+        } else {
+            boardDifficulty.level = this.Difficulties.Hard;
+        }
+
+        let totalScore = 0;
+        for(let i=0; i < strategies.length; i++){
+            let freq = usedStrategies[i];
+            if(!freq)
+                continue; //undefined or 0, won't effect score
+            let stratObj = strategies[i];
+            totalScore += freq * stratObj.score;
+        }
+        boardDifficulty.score = totalScore;
+        //log("totalScore: "+totalScore);
+
+        if (totalScore > 750) {
+            boardDifficulty.level = this.Difficulties.VeryHard;
+        }
+        return boardDifficulty;
+    }
+
+    /* isBoardFinished
+     * -----------------------------------------------------------------*/
+    isBoardFinished(board) 
+    {
+        return !(this.contains(board, null));
     }
 }
